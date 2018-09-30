@@ -5,19 +5,19 @@ $page_title = "Register New User";
 
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     $user = $users->userdata($_SESSION['id']);
-    $username = $user['username'];
-    $logAuth = $user['userLevel'];
+    $username = $user['USERNAME'];
+    $logAuth = $user['USER_LEVEL'];
     if ($logAuth != 1) {
         header('Location:' . $global->wwwroot . 'application/login/deny.php');
     }
 } else {
-    if ($users->firstTimeUserAdd() === TRUE) {
-        
-    } else {
+//    if ($users->firstTimeUserAdd() === TRUE) {
+//        
+//    } else {
         if (empty($_SESSION['id'])) {
             header('Location:' . $global->wwwroot . 'application/login/login.php');
         }
-    }
+//    }
 }
 
 

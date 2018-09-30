@@ -75,8 +75,8 @@
                                     }
                                     if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
                                         $user = $users->userdata($_SESSION['id']);
-                                        $username = $user['username'];
-                                        $logAuth = $user['userLevel'];
+                                        $username = $user['USERNAME'];
+                                        $logAuth = $user['USER_LEVEL'];
                                         if($logAuth==1){
                                             echo "<a href='" . WWWROOT . "application/login/members.php'><i class='fa fa-user fa-fw'></i> User Profile</a>";
                                         }   

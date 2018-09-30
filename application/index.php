@@ -3,8 +3,8 @@
 require '../core/init.php';
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     $user = $users->userdata($_SESSION['id']);
-    $username = $user['username'];
-    $logAuth = $user['userLevel'];
+    $username = $user['USERNAME'];
+    $logAuth = $user['USER_LEVEL'];
     if ($logAuth == 1) {
     }
 } else {

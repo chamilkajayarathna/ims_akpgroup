@@ -7,8 +7,8 @@ if(isset($_GET['id'])){
 }
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     $user = $users->userdata($_SESSION['id']);
-    $username = $user['username'];
-    $logAuth = $user['userLevel'];
+    $username = $user['USERNAME'];
+    $logAuth = $user['USER_LEVEL'];
     if ($logAuth != 1) {
         header('Location:' . $global->wwwroot . 'application/login/deny.php');
     }

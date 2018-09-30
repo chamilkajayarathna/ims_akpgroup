@@ -2,8 +2,8 @@
 require '../../core/init.php';
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     $user = $users->userdata($_SESSION['id']);
-    $username = $user['username'];
-    $logAuth = $user['userLevel'];
+    $username = $user['USERNAME'];
+    $logAuth = $user['USER_LEVEL'];
     if ($logAuth != 1) {
         header('Location:' . $global->wwwroot . 'application/login/deny.php');
     }
@@ -25,22 +25,26 @@ echo "<a href='editEmployee.php' class='btn btn-default pull-right left-margin'>
 echo "<a href='category.php' class='btn btn-default pull-right left-margin'>Category Details</a>";
 echo "</div>";
 
-$serialNo = $dbCRUD->selectAll('employee', 'serial_no', NULL, NULL, 'serial_no DESC', '1');
-while ($row1 = $serialNo->fetch(PDO::FETCH_ASSOC)) {
-    extract($row1);
+$serialNo = $dbCRUD->selectAll('employee', 'SERIAL_NO', NULL, NULL, 'SERIAL_NO DESC', '1');
+if ($row1 = $serialNo->fetch(PDO::FETCH_ASSOC)) {
+    $sno = substr(extract($row1), 1);
     //print_r($serial_no);
-    if ($serial_no == 0) {
-        $newSerialNo = 1;
-    } else {
-        $newSerialNo = $serial_no + 1;
+    if($sno){
+        $newSerialNo = $sno + 1;
     }
+}
+else {
+    $newSerialNo = 1;
+    $newSerialNo = "E".str_pad($newSerialNo, 4, '0', STR_PAD_LEFT);
 }
 
 // if the form was submitted
 if ($_POST) {
     // set product property values
     $txtId = $newSerialNo;
-    $txtName = filter_input(INPUT_POST, 'txtName');
+    $txtFullName = filter_input(INPUT_POST, 'txtFullName');
+    $txtInitialName = filter_input(INPUT_POST,'txtInitialName');
+    $txtPreferredName = filter_input(INPUT_POST,'txtPreferredName');
     $txtNic = filter_input(INPUT_POST, 'txtNic');
     $txtDob = filter_input(INPUT_POST, 'txtDob');
     $txtAddress = filter_input(INPUT_POST, 'txtAddress');
@@ -84,22 +88,28 @@ if ($_POST) {
     //$fiels = 'employee.name,employee.epf_no,employee.appoinment_date,employee.nic,employee.dob,employee.address,employee.contact,designation.designation';
     //$join = 'designation ON employee.designation = number';
     //Organize data to insert with field name and value
-    $data = array('serial_no' => $txtId,
-        'designation' => $txtDesig,
-        'name' => $txtName,
-        'epf_no' => $txtEpf,
-        'appoinment_date' => $txtAppoinmnt,
-        'nic' => $txtNic,
-        'dob' => $txtDob,
-        'address' => $txtAddress,
-        'contact' => $txtContact,
-        'workSite' => $txtwork,
-        'img' => $newfilename,
-        'basicSalary' => $txtBasicSal,
-        'workTarget' => $txtWrkTrgt,
-        'spIntencive' => $txtSpIncntive,
-        'difficult' => $txtDfIncentive,
-        'other' => $txtOther
+    $data = array('SERIAL_NO' => $txtId,
+        'FULL_NAME' => $txtFullName,
+        'NAME_WITH_INITIALS' => $txtFullName,
+        'PREFFERED_NAME' => $txtPreferredName,
+        'EPF_NO' => $txtEpf,
+        'APPOINTMENT_DATE' => $txtAppoinmnt,
+        'NIC' => $txtNic,
+        'DATE_OF_BIRTH' => $txtDob,
+        'ADDRESS' => $txtAddress,
+        'PHONE' => $txtContact,
+        'PHOTO' => $newfilename,
+        'BASIC_SALARY' => $txtBasicSal,
+        'WORK_TARGET' => $txtWrkTrgt,
+        'SP_INTENCIVE' => ($txtSpIncntive =="" ? 0.0 : $txtSpIncntive),
+        'DIFFICULTY' => ($txtDfIncentive =="" ? 0.0 : $txtDfIncentive),
+        'OTHER' => ($txtOther =="" ? 0.0 : $txtOther),
+        'DESIGNATION_ID' => $txtDesig,
+        'INSERT_USER' => 1,
+        'INSERT_DATETIME' => date('Y-m-d H:i:s'),
+        'UPDATE_USER' => 1,
+        'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+        'STATUS' => 1
     );
 
     // Add new record
@@ -137,8 +147,16 @@ if ($_POST) {
     }
 
     $(function () {
-        $("#datepicker").datepicker();
-        $("#datepicker1").datepicker();
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '1950:' + new Date().getFullYear().toString()
+        });
+        $("#datepicker1").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '2010:' + new Date().getFullYear().toString()
+        });
     });
 </script>
 
@@ -160,13 +178,24 @@ if ($_POST) {
                     <br>
                     <table class='table table-responsive'>
                         <tr>
-                            <td>ID</td>
-                            <td><input type='text' name='txtId' class='form-control' value="<?php echo $newSerialNo ?>" required></td>
+                            <td>Employee No</td>
+                            <td><input type='text' name='txtId' class='form-control' value="<?php echo $newSerialNo ?>" readonly></td>
                         </tr>
                         <tr>
-                            <td>Name</td>
-                            <td><input type='text' name='txtName' class='form-control' required title="Employee Name"></td>
+                            <td>Full Name</td>
+                            <td><input type='text' name='txtFullName' class='form-control' required title="Employee Name"></td>
                         </tr>
+                        
+                        <tr>
+                            <td>Name with initials</td>
+                            <td><input type='text' name='txtInitialName' class='form-control' required title="Employee Name"></td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Preferred Name</td>
+                            <td><input type='text' name='txtPreferredName' class='form-control' required title="Employee Name"></td>
+                        </tr>
+                        
                         <tr>
                             <td>NIC</td>
                             <td><input type='text' name='txtNic' class='form-control' required pattern="[0-9]{9}V" title="Enter NIC- 9 digits Number"></td>
@@ -181,7 +210,7 @@ if ($_POST) {
                         </tr>
                         <tr>
                             <td>Contact Number</td>
-                            <td><input type='text' name='txtContact' required pattern="[0-9]{10}" class='form-control'></td>
+                            <td><input type='text' name='txtContact' pattern="[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}" class='form-control'></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -208,7 +237,7 @@ if ($_POST) {
                                 echo "<select class='form-control' name='txtDesig' required>";
                                 while ($row_category = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     extract($row_category);
-                                    echo "<option value='{$number}'>{$designation}</option>";
+                                    echo "<option value='{$ID}'>{$NAME}</option>";
                                 }
 
                                 echo "</select>";
@@ -279,6 +308,18 @@ if ($_POST) {
             <button type="submit" class="btn btn-success">Save Employee</button>
         </div>
 </form>
+
+<script type="text/javascript">
+//    $(document).ready(function(){
+//       $( "#datepicker" ).datepicker({
+//            changeMonth: true,
+//            changeYear: true
+//          });
+//    });
+//    
+  
+    
+  </script>
 
 <?php
 //include_once "footer.php";

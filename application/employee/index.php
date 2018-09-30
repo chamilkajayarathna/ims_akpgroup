@@ -47,12 +47,17 @@ $records_per_page = 10;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 //$stmt = $dbCRUD->selectAll('products', '*', NULL, NULL, 'name ASC', "$from_record_num,$records_per_page");
-$table_Name = 'employee e, designation d, machinesite m';
-$fiels = 'e.serial_no,e.name,e.epf_no,e.appoinment_date,e.nic,e.dob,e.address,e.contact,m.siteN,d.designation';
-$join = NULL;
-$where = 'e.designation= d.number AND e.workSite = m.siteNo';
+//$table_Name = 'employee e, designation d, machine_site m';
+//$fiels = 'e.SERIAL_NO,e.NAME_WITH_INITIALS,e.EPF_NO,e.APPOINTMENT_DATE,e.NIC,e.DOB,e.ADDRESS,e.CONTACT,m.SITEN,d.DESIGNATION_ID';
+//$join = NULL;
+//$where = 'e.DESIGNATION_ID= d.NUMBER AND e.WORKSITE = m.SITENO';
 
-$stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, 'serial_no ASC', "$from_record_num,$records_per_page");
+$table_Name = 'employee e, designation d';
+$fiels = 'e.SERIAL_NO,e.NAME_WITH_INITIALS,e.EPF_NO,e.APPOINTMENT_DATE,e.NIC,e.DATE_OF_BIRTH,e.ADDRESS,e.PHONE,d.NAME DESIGNATION';
+$join = NULL;
+$where = 'e.DESIGNATION_ID=d.ID AND e.STATUS=1';
+
+$stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, 'SERIAL_NO ASC', "$from_record_num,$records_per_page");
 $num = $stmt->rowCount();
 
 
@@ -78,14 +83,14 @@ if ($num > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         echo "<tr>";
-        echo "<td class='col-md-4'>{$name}</td>";
-        echo "<td>{$designation}</td>";
-        echo "<td>{$epf_no}</td>";
-        echo "<td class='col-md-1'>{$appoinment_date}</td>";
-        echo "<td>{$nic}</td>";
-        echo "<td>{$dob}</td>";
-        echo "<td class='col-md-4'>{$address}</td>";
-        echo "<td>{$contact}</td>";
+        echo "<td class='col-md-4'>{$NAME_WITH_INITIALS}</td>";
+        echo "<td>{$DESIGNATION}</td>";
+        echo "<td>{$EPF_NO}</td>";
+        echo "<td class='col-md-1'>{$APPOINTMENT_DATE}</td>";
+        echo "<td>{$NIC}</td>";
+        echo "<td>{$DATE_OF_BIRTH}</td>";
+        echo "<td class='col-md-4'>{$ADDRESS}</td>";
+        echo "<td>{$PHONE}</td>";
 //        echo "<td>{$siteN}</td>";
         echo "</tr>";
     }

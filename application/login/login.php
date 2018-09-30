@@ -8,6 +8,7 @@ $general->logged_in_protect();
 if (empty($_POST) === false) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
+    echo $username;
     if (empty($username) === true || empty($password) === true) {
         $errors[] = 'Sorry, We need your username and password.';
     } else if ($users->user_exists($username) === false) {
@@ -35,7 +36,7 @@ require_once(FOLDER_Template . 'header.php');
     <div class="box-login panel panel-default panel-body">
         <div class="logo">
         <?php
-        $stmt1 = $dbCRUD->selectAll('users', 'id', NULL, NULL, NULL, NULL);
+        $stmt1 = $dbCRUD->selectAll('user', 'ID', NULL, NULL, NULL, NULL);
         $num1 = $stmt1->rowCount();
         if ($num1 > 0) {
             

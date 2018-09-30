@@ -28,11 +28,11 @@
         <li class=" active sidebar-brand ">
             <a href="<?php echo $global->wwwroot; ?>application/reports/index.php"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
         </li>
-        <li><a href="<?php echo $global->wwwroot; ?>application/employee/addEmployee.php"><i class="fa fa-users fa-fw"></i>Employees</a></li>
+        <li><a href="<?php echo $global->wwwroot; ?>application/employee/index.php"><i class="fa fa-users fa-fw"></i>Employees</a></li>
 
         <li><a href="<?php echo $global->wwwroot; ?>application/machine/index.php"><i class="fa fa-truck fa-fw"></i>Machines</a></li>
 
-        <li><a href="<?php echo $global->wwwroot; ?>application/construction/addProject.php"><i class="fa fa-tasks fa-fw"></i>Projects</a></li>
+        <li><a href="<?php echo $global->wwwroot; ?>application/construction/index.php"><i class="fa fa-tasks fa-fw"></i>Projects</a></li>
         
 	<li><a href="<?php echo $global->wwwroot; ?>application/reports/index2.php"><i class="fa fa-file-text fa-fw"></i>Reports</a></li>
     </ul>

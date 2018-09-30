@@ -114,21 +114,26 @@ if ($_POST) {
 
     //$newfilename
     //Organize Update array
-    $data = array('designation' => $txtDesig,
-        'name' => $txtName,
-        'epf_no' => $txtEpf,
-        'appoinment_date' => $txtAppoinmnt,
-        'nic' => $txtNic,
-        'dob' => $txtDob,
-        'address' => $txtAddress,
-        'contact' => $txtContact,
-        'workSite' => $txtwork,
-        'img' => $newfilename,
-        'basicSalary' => $txtBasicSal,
-        'workTarget' => $txtWrkTrgt,
-        'spIntencive' => $txtSpIncntive,
-        'difficult' => $txtDfIncentive,
-        'other' => $txtOther
+    $data = array('SERIAL_NO' => $txtId,
+        'FULL_NAME' => $txtFullName,
+        'NAME_WITH_INITIALS' => $txtFullName,
+        'PREFFERED_NAME' => $txtPreferredName,
+        'EPF_NO' => $txtEpf,
+        'APPOINTMENT_DATE' => $txtAppoinmnt,
+        'NIC' => $txtNic,
+        'DATE_OF_BIRTH' => $txtDob,
+        'ADDRESS' => $txtAddress,
+        'PHONE' => $txtContact,
+        'PHOTO' => $newfilename,
+        'BASIC_SALARY' => $txtBasicSal,
+        'WORK_TARGET' => $txtWrkTrgt,
+        'SP_INTENCIVE' => ($txtSpIncntive =="" ? 0.0 : $txtSpIncntive),
+        'DIFFICULTY' => ($txtDfIncentive =="" ? 0.0 : $txtDfIncentive),
+        'OTHER' => ($txtOther =="" ? 0.0 : $txtOther),
+        'DESIGNATION_ID' => $txtDesig,
+        'UPDATE_USER' => 1,
+        'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+        'STATUS' => 1
     );
     
     // update the product

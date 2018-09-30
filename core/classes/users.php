@@ -9,7 +9,7 @@ class Users {
     }
 
     public function firstTimeUserAdd() {
-        $query = $this->db->prepare("SELECT COUNT(`id`) FROM `users`");
+        $query = $this->db->prepare("SELECT COUNT(`ID`) FROM `user`");
         try {
             $query->execute();
             $rows = $query->fetchColumn();
@@ -24,7 +24,7 @@ class Users {
     }
 
     public function user_exists($username) {
-        $query = $this->db->prepare("SELECT COUNT(`id`) FROM `users` WHERE `username`= ?");
+        $query = $this->db->prepare("SELECT COUNT(`ID`) FROM `user` WHERE `USERNAME`= ?");
         $query->bindValue(1, $username);
         try {
             $query->execute();
@@ -44,7 +44,7 @@ class Users {
         //$ip 		= $_SERVER['REMOTE_ADDR'];
         //$email_code = sha1($username + microtime());
         $password = sha1($password);
-        $query = $this->db->prepare("INSERT INTO `users` (`username`, `password`, `userLevel`) VALUES (?, ?, ?) ");
+        $query = $this->db->prepare("INSERT INTO `user` (`USERNAME`, `PASSWORD`, `USER_LEVEL`) VALUES (?, ?, ?) ");
         $query->bindValue(1, $username);
         $query->bindValue(2, $password);
         $query->bindValue(3, $userLevel);
@@ -56,16 +56,17 @@ class Users {
     }
 
     public function login($username, $password) {
-        $query = $this->db->prepare("SELECT `password`, `id` FROM `users` WHERE `username` = ?");
+        $query = $this->db->prepare("SELECT * FROM `user` WHERE `USERNAME` = ? and `PASSWORD`=?");
         $query->bindValue(1, $username);
+        $pass = sha1($password);
+        $query->bindValue(2, sha1($password));
         try {
             $query->execute();
             $data = $query->fetch();
-            $stored_password = $data['password'];
-            $id = $data['id'];
-            if ($stored_password === sha1($password)) {
-                return $id;
-            } else {
+            if($data){
+                return $data['ID'];
+            }
+            else {
                 return false;
             }
         } catch (PDOException $e) {
@@ -74,7 +75,7 @@ class Users {
     }
 
     public function userdata($id) {
-        $query = $this->db->prepare("SELECT * FROM `users` WHERE `id`= ?");
+        $query = $this->db->prepare("SELECT * FROM `user` WHERE `ID`= ?");
         $query->bindValue(1, $id);
         try {
             $query->execute();
@@ -85,7 +86,7 @@ class Users {
     }
 
     public function get_users() {
-        $query = $this->db->prepare("SELECT * FROM `users`");
+        $query = $this->db->prepare("SELECT * FROM `user`");
         try {
             $query->execute();
         } catch (PDOException $e) {

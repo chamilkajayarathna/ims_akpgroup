@@ -5,8 +5,8 @@ $page_title = "Employee Details";
 
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     $user = $users->userdata($_SESSION['id']);
-    $username = $user['username'];
-    $logAuth = $user['userLevel'];
+    $username = $user['USERNAME'];
+    $logAuth = $user['USER_LEVEL'];
     if ($logAuth != 1) {
         header('Location:' . $global->wwwroot . 'application/login/deny.php');
     }
@@ -26,11 +26,16 @@ $records_per_page = 10;
 // calculate for the query LIMIT clause
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
-$table_Name = 'employee e, designation d, machinesite m';
-$fiels = 'e.*, d.designation, m.siteN';
+//$table_Name = 'employee e, designation d, machinesite m';
+//$fiels = 'e.*, d.designation, m.siteN';
+//$join = NULL;
+//$where = 'e.designation = d.number AND e.workSite = m.siteNo';
+//$order = 'e.serial_no ASC';
+$table_Name = 'employee e, designation d';
+$fiels = 'e.SERIAL_NO,e.NAME_WITH_INITIALS,e.EPF_NO,e.APPOINTMENT_DATE,e.NIC,e.DATE_OF_BIRTH,e.ADDRESS,e.PHONE,d.NAME DESIGNATION';
 $join = NULL;
-$where = 'e.designation = d.number AND e.workSite = m.siteNo';
-$order = 'e.serial_no ASC';
+$where = 'e.DESIGNATION_ID=d.ID AND e.STATUS=1';
+$order = 'e.SERIAL_NO ASC';
 
 $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, $order, "$from_record_num,$records_per_page");
 
@@ -131,17 +136,17 @@ if ($num > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         echo "<tr>";
-        echo "<td class='col-md-4'>{$name}</td>";
-        echo "<td>{$designation}</td>";
-        echo "<td>{$epf_no}</td>";
-        echo "<td class='col-md-1'>{$appoinment_date}</td>";
-        echo "<td>{$nic}</td>";
-        echo "<td>{$dob}</td>";
-        echo "<td class='col-md-4'>{$address}</td>";
-        echo "<td>{$contact}</td>";
+        echo "<td class='col-md-4'>{$NAME_WITH_INITIALS}</td>";
+        echo "<td>{$DESIGNATION}</td>";
+        echo "<td>{$EPF_NO}</td>";
+        echo "<td class='col-md-1'>{$APPOINTMENT_DATE}</td>";
+        echo "<td>{$NIC}</td>";
+        echo "<td>{$DATE_OF_BIRTH}</td>";
+        echo "<td class='col-md-4'>{$ADDRESS}</td>";
+        echo "<td>{$PHONE}</td>";
         echo "<td class='col-md-2'>";
-        echo "<a href='updateEmployee.php?id={$serial_no}' class='btn btn-xs btn-primary left-margin'>Edit</a>";
-        echo "<a resign-id='{$serial_no}' class='btn btn-xs btn-warning resign-object'>Resign</a>";
+        echo "<a href='updateEmployee.php?id={$SERIAL_NO}' class='btn btn-xs btn-primary left-margin'>Edit</a>";
+        echo "<a resign-id='{$SERIAL_NO}' class='btn btn-xs btn-warning resign-object'>Resign</a>";
         echo "</td>";
         echo "</tr>";
     }

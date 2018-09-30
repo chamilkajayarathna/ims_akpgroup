@@ -4,8 +4,8 @@ require ('../../core/init.php');
 $page_title = "Machine Details";
 
 $user = $users->userdata($_SESSION['id']);
-$username = $user['username'];
-$logAuth = $user['userLevel'];
+$username = $user['USERNAME'];
+$logAuth = $user['USER_LEVEL'];
 
 
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
