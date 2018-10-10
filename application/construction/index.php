@@ -21,10 +21,11 @@ $records_per_page = 10;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 $table_Name = 'project p';
-$fiels = 'p.contractNo,p.projectName,p.client,p.progress,p.commencementDate,p.completionDate,p.extendedDate,p.contractPeriod,p.contractSum,p.extendedContractSum';
+$fiels = 'p.CONTRACT_NO,p.NAME,p.CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
+//$fields = '*';
 $join = NULL;
 $where = NULL;
-$order = 'p.contractNo ASC';
+$order = 'p.CONTRACT_NO ASC';
 
 $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, $order, "$from_record_num,$records_per_page");
 $num = $stmt->rowCount();
@@ -80,19 +81,18 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
                     <?php
                     if ($num > 0) {
                         while ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $total = $rows['contractSum'] + $rows['extendedContractSum'];
+                            $total = $rows['CONTRACT_SUM'] + $rows['EXTENDED_CONTRACT_SUM'];
                             echo "<tr>";
                             
-                            echo "<td>" . $rows['contractNo'] . "</td>";
-                            echo "<td>" . $rows['projectName'] . "</td>";
-                            
-                            echo "<td>" . $rows['progress'] . "</td>";
-                            echo "<td>" . $rows['commencementDate'] . "</td>";
-                            echo "<td>" . $rows['completionDate'] . "</td>";
-                            echo "<td>" . $rows['extendedDate'] . "</td>";
-                            echo "<td>" . $rows['contractPeriod'] . "</td>";
-                            echo "<td>" . $rows['contractSum'] . "</td>";
-                            echo "<td>" . $rows['extendedContractSum'] . "</td>";
+                            echo "<td>" . $rows['CONTRACT_NO'] . "</td>";
+                            echo "<td>" . $rows['NAME'] . "</td>";
+                            echo "<td>" . $rows['PROGRESS'] . "</td>";
+                            echo "<td>" . $rows['COMMENCEMENT_DATE'] . "</td>";
+                            echo "<td>" . $rows['COMPLETION_DATE'] . "</td>";
+                            echo "<td>" . $rows['EXTENDED_DATE'] . "</td>";
+                            echo "<td>" . $rows['CONTRACT_PERIOD'] . "</td>";
+                            echo "<td>" . $rows['CONTRACT_SUM'] . "</td>";
+                            echo "<td>" . $rows['EXTENDED_CONTRACT_SUM'] . "</td>";
                            
                             echo '</tr>';
                         }

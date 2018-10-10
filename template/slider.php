@@ -23,8 +23,8 @@
         <li class="last-child"><a href="<?php echo $global->wwwroot; ?>application/attendance/index.php"><i class="fa fa-users fa-fw"></i>Attendance</a></li>
         
         <li><a href="<?php echo $global->wwwroot; ?>application/reports/index2.php"><i class="fa fa-briefcase fa-fw"></i>IMS REPORTS</a></li>
-    </ul> -->
-	<ul class="sidebar-nav">
+    </ul>-->
+    <ul class="sidebar-nav">
         <li class=" active sidebar-brand ">
             <a href="<?php echo $global->wwwroot; ?>application/reports/index.php"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
         </li>

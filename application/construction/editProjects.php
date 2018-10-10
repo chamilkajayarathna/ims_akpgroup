@@ -26,11 +26,11 @@ $records_per_page = 10;
 // calculate for the query LIMIT clause
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
-$table_Name = 'project p, clients c ';
-$fiels = 'p.contractNo,p.projectName,p.client,p.progress,p.commencementDate,p.completionDate,p.extendedDate,p.contractPeriod,p.contractSum,p.extendedContractSum';
+$table_Name = 'project p, client c ';
+$fiels = 'p.ID,p.CONTRACT_NO,p.NAME,c.NAME AS CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
 $join = NULL;
-$where = 'p.contractNo = c.cid';
-$order = 'p.contractNo ASC';
+$where = 'p.CLIENT_ID = c.ID';
+$order = 'p.CONTRACT_NO ASC';
 
 $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, $order, "$from_record_num,$records_per_page");
 $num = $stmt->rowCount();
@@ -71,7 +71,7 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
                     <tr>
                         <th>Project No</th>
                         <th>Name</th>
-                        <th>Principal</th>
+                        <th>Client</th>
                         <th>Progress</th>
                         <th>Commencement Date</th>
                         <th>Completion Date</th>
@@ -87,22 +87,22 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
                     <?php
                     if ($num > 0) {
                         while ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $total = $rows['contractSum'] + $rows['extendedContractSum'];
+                            $total = $rows['CONTRACT_SUM'] + $rows['EXTENDED_CONTRACT_SUM'];
                             echo "<tr>";
-                            echo "<td>" . $rows['contractNo'] . "</td>";
-                            echo "<td>" . $rows['projectName'] . "</td>";
-                            echo "<td>" . $rows['client'] . "</td>";
-                            echo "<td>" . $rows['progress'] . "</td>";
-                            echo "<td>" . $rows['commencementDate'] . "</td>";
-                            echo "<td>" . $rows['completionDate'] . "</td>";
-                            echo "<td>" . $rows['extendedDate'] . "</td>";
-                            echo "<td>" . $rows['contractPeriod'] . "</td>";
-                            echo "<td>" . $rows['contractSum'] . "</td>";
-                            echo "<td>" . $rows['extendedContractSum'] . "</td>";
-                            echo "<td>" . $total . "</td>";
+                             echo "<td>" . $rows['CONTRACT_NO'] . "</td>";
+                            echo "<td>" . $rows['NAME'] . "</td>";
+                            echo "<td>" . $rows['CLIENT_ID'] . "</td>";
+                            echo "<td>" . $rows['PROGRESS'] . "</td>";
+                            echo "<td>" . $rows['COMMENCEMENT_DATE'] . "</td>";
+                            echo "<td>" . $rows['COMPLETION_DATE'] . "</td>";
+                            echo "<td>" . $rows['EXTENDED_DATE'] . "</td>";
+                            echo "<td>" . $rows['CONTRACT_PERIOD'] . "</td>";
+                            echo "<td>" . $rows['CONTRACT_SUM'] . "</td>";
+                            echo "<td>" . $rows['EXTENDED_CONTRACT_SUM'] . "</td>";
+                           echo "<td>" . $total . "</td>";
                             echo "<td>";
-                            echo "<a href='addProject.php?id=" . $rows['contractNo'] . "' class='btn btn-xs btn-warning left-margin'>Edit</a>";
-                            echo "<a delete-id='" . $rows['contractNo'] . "' class='btn btn-xs btn-danger delete-object'>Delete</a>";
+                            echo "<a href='addProject.php?id=" . $rows['ID'] . "' class='btn btn-xs btn-warning left-margin'>Edit</a>";
+                            echo "<a delete-id='" . $rows['ID'] . "' class='btn btn-xs btn-danger delete-object'>Delete</a>";
                             echo "</td>";
                             echo '</tr>';
                         }

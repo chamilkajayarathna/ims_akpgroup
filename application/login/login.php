@@ -32,7 +32,8 @@ if (empty($_POST) === false) {
 //Load page Headder
 require_once(FOLDER_Template . 'header.php');
 ?>
-<div class="main-login col-sm-5">
+
+<div class="main-login col-sm-4 col-sm-offset-3 col-md-4 col-md-offset-3 main">
     <div class="box-login panel panel-default panel-body">
         <div class="logo">
         <?php
@@ -71,7 +72,7 @@ require_once(FOLDER_Template . 'header.php');
                         Keep me signed in
                     </label>
                     <input type="hidden" name="_task" id="_task" value="login">
-                    <a href="<?php echo $global->wwwroot ?>index.php" class="btn btn-default pull-right">Cancle
+                    <a href="<?php echo $global->wwwroot ?>index.php" class="btn btn-default pull-right">Cancel
                         <i class="fa fa-times"></i>
                     </a>
                     <button type="submit" class="btn btn-primary pull-right  left-margin">

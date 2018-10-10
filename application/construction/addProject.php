@@ -23,7 +23,7 @@ if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
 require_once(FOLDER_Template . 'header.php');
 
 //Dropdown list data load
-$ddlClients = $dbCRUD->ddlDataLoad('SELECT * FROM clients');
+$ddlClients = $dbCRUD->ddlDataLoad('SELECT * FROM client WHERE STATUS=1');
 
 
 if (isset($_SESSION['insert']) && !empty($_SESSION['insert'])) {
@@ -87,15 +87,19 @@ if (isset($_GET['id'])) {
             $esum = filter_input(INPUT_POST, 'esum');
 
             $table_Name = 'project';
-            $data = array('projectName' => $name,
-                'commencementDate' => $commencement,
-                'completionDate' => $completion,
-                'extendedDate' => $extendedDate,
-                'contractPeriod' => $period,
-                'contractSum' => $sum,
-                'extendedContractSum' => $esum,
-                'client' => $clint_no,
-                'progress' => $progress
+                $data = array(
+                'NAME' => $name,
+                'COMMENCEMENT_DATE' => $commencement,
+                'COMPLETION_DATE' => $completion,
+                'EXTENDED_DATE' => $extendedDate,
+                'CONTRACT_PERIOD' => $period,
+                'CONTRACT_SUM' => $sum,
+                'EXTENDED_CONTRACT_SUM' => $esum,
+                'CLIENT_ID' => $clint_no,
+                'PROGRESS' => $progress,
+                'UPDATE_USER' => 1,
+                'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+                'STATUS' => 1
             );
 
             if ($dbCRUD->updateData($table_Name, $data, 'id=' . $id . ' ')) {
@@ -113,16 +117,16 @@ if (isset($_GET['id'])) {
         $stmtClientData = $dbCRUD->selectAll('project', '*', NULL, 'id=' . $id, NULL, NULL);
         while ($row1 = $stmtClientData->fetch(PDO::FETCH_ASSOC)) {
             extract($row1);
-            $number = $contractNo;
-            $name = $projectName;
-            $commencement = $commencementDate;
-            $completion = $completionDate;
-            $extendedDate = $extendedDate;
-            $period = $contractPeriod;
-            $sum = $contractSum;
-            $esum = $extendedContractSum;
-            $clint_no = $client;
-            $progress = $progress;
+            $number = $CONTRACT_NO;
+            $name = $NAME;
+            $commencement = $COMMENCEMENT_DATE;
+            $completion = $COMPLETION_DATE;
+            $extendedDate = $EXTENDED_DATE;
+            $period = $CONTRACT_PERIOD;
+            $sum = $CONTRACT_SUM;
+            $esum = $EXTENDED_CONTRACT_SUM;
+            $clint_no = $CLIENT_ID;
+            $progress = $PROGRESS;
         }
         renderForm($number, $name, $commencement, $completion, $extendedDate, $period, $sum, $esum, $clint_no, $progress, $ddlClients);
     }
@@ -144,16 +148,21 @@ if (isset($_GET['id'])) {
         $esum = filter_input(INPUT_POST, 'esum');
 
         $table_Name = 'project';
-        $data = array('contractNo' => $number,
-            'projectName' => $name,
-            'commencementDate' => $commencement,
-            'completionDate' => $completion,
-            'extendedDate' => $extendedDate,
-            'contractPeriod' => $period,
-            'contractSum' => $sum,
-            'extendedContractSum' => $esum,
-            'client' => $clint_no,
-            'progress' => $progress
+        $data = array('CONTRACT_NO' => $number,
+            'NAME' => $name,
+            'COMMENCEMENT_DATE' => $commencement,
+            'COMPLETION_DATE' => $completion,
+            'EXTENDED_DATE' => $extendedDate,
+            'CONTRACT_PERIOD' => $period,
+            'CONTRACT_SUM' => $sum,
+            'EXTENDED_CONTRACT_SUM' => $esum,
+            'CLIENT_ID' => $clint_no,
+            'PROGRESS' => $progress,
+            'INSERT_USER' => 1,
+            'INSERT_DATETIME' => date('Y-m-d H:i:s'),
+            'UPDATE_USER' => 1,
+            'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+            'STATUS' => 1
         );
 
         if ($dbCRUD->insertData($table_Name, $data)) {
@@ -204,12 +213,12 @@ function renderForm($number = '', $name = '', $commencement = '', $completion = 
                                             <?php
                                             //current db site name
                                             foreach ($ddlClients as $clients) {
-                                                if ($clint_no == $clients['cid']) {
-                                                    echo "<option value='" . $clients['cid'] . "' selected>";
+                                                if ($clint_no == $clients['ID']) {
+                                                    echo "<option value='" . $clients['ID'] . "' selected>";
                                                 } else {
-                                                    echo "<option value='" . $clients['cid'] . "'>";
+                                                    echo "<option value='" . $clients['ID'] . "'>";
                                                 }
-                                                echo $clients['name'] . "</option>";
+                                                echo $clients['NAME'] . "</option>";
                                             }
                                             ?>
                                         </select>

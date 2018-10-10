@@ -20,11 +20,11 @@ $records_per_page = 10;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 //$stmt = $dbCRUD->selectAll('products', '*', NULL, NULL, 'name ASC', "$from_record_num,$records_per_page");
-$table_Name = 'project p';
-$fiels = 'p.contractNo,p.projectName,p.client,p.progress,p.commencementDate,p.completionDate,p.extendedDate,p.contractPeriod,p.contractSum,p.extendedContractSum';
+$table_Name = 'project p, client c';
+$fiels = 'p.ID,p.CONTRACT_NO,p.NAME,c.NAME as CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
 $join = NULL;
-$where = NULL;
-$order = 'p.contractNo ASC';
+$where = 'p.CLIENT_ID=c.ID';
+$order = 'p.CONTRACT_NO ASC';
 
 $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, $order, "$from_record_num,$records_per_page");
 $num = $stmt->rowCount();
@@ -58,15 +58,15 @@ if ($num > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         echo "<tr>";
-        echo "<td class='col-md-4'><a href='singleProjectDetails.php?contractNo=$contractNo&name=$projectName'>{$projectName}</a></td>";               
-        echo "<td>{$client}</td>";
-        echo "<td>{$progress}</td>";
-        echo "<td>{$commencementDate}</td>";
-        echo "<td>{$completionDate}</td>";        
-        echo "<td>{$extendedDate}</td>";
-        echo "<td>{$contractPeriod}</td>";
-        echo "<td>{$contractSum}</td>";
-        echo "<td>{$extendedContractSum}</td>";
+        echo "<td class='col-md-4'><a href='singleProjectDetails.php?id=$ID'>{$NAME}</a></td>";               
+        echo "<td>{$CLIENT_ID}</td>";
+        echo "<td>{$PROGRESS}</td>";
+        echo "<td>{$COMMENCEMENT_DATE}</td>";
+        echo "<td>{$COMPLETION_DATE}</td>";        
+        echo "<td>{$EXTENDED_DATE}</td>";
+        echo "<td>{$CONTRACT_PERIOD}</td>";
+        echo "<td>{$CONTRACT_SUM}</td>";
+        echo "<td>{$EXTENDED_CONTRACT_SUM}</td>";
         
         echo "</tr>";
     }
@@ -75,7 +75,7 @@ if ($num > 0) {
     echo "</div>";
     // paging buttons
     $_SESSION['pageName'] = $currentPage;
-    $_SESSION['tableName'] = 'project';
+    $_SESSION['tableName'] = 'projects';
     require_once (FOLDER_Template . 'paging_employee.php');
     
 }

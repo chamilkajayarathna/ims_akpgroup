@@ -12,13 +12,12 @@ if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
 $page_title = "Single Project Records";
 require_once(FOLDER_Template . 'header.php');
 
-$contractNo = $_GET['contractNo'];
+$contractNo = $_GET['id'];
 
-
-$table_Name = 'project p';
-$fields = 'p.*';
+$table_Name = 'project p, client c';
+$fields = 'p.ID,p.CONTRACT_NO,p.NAME,c.NAME AS CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
 $join = NULL;
-$where = "p.contractNo=".$contractNo."";
+$where = "p.CLIENT_ID = c.ID and p.ID=".$contractNo."";
 $orderBy = NULL;
 
 $stmts = $dbCRUD->selectAll($table_Name, $fields, $join, $where, $orderBy, NULL);
@@ -27,16 +26,16 @@ $num = $stmts->rowCount();
 
 while ($row = $stmts->fetch(PDO::FETCH_ASSOC)){
 extract($row);
-$contractNo = $contractNo;
-$projectName = $projectName;
-$client= $client;
-$progress = $progress;
-$commencementDate = $commencementDate;
-$completionDate = $completionDate;
-$extendedDate = $extendedDate;
-$contractPeriod = $contractPeriod;
-$contractSum= $contractSum;
-$extendedContractSum = $extendedContractSum;
+$contractNo = $CONTRACT_NO;
+$projectName = $NAME;
+$client= $CLIENT_ID;
+$progress = $PROGRESS;
+$commencementDate = $COMMENCEMENT_DATE;
+$completionDate = $COMPLETION_DATE;
+$extendedDate = $EXTENDED_DATE;
+$contractPeriod = $CONTRACT_PERIOD;
+$contractSum= $CONTRACT_SUM;
+$extendedContractSum = $EXTENDED_CONTRACT_SUM;
   
 }
 
