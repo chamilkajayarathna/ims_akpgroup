@@ -20,11 +20,11 @@ $records_per_page = 10;
 // calculate for the query LIMIT clause
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
-$table_Name = 'project p';
+$table_Name = 'project p, client c';
 $fiels = 'p.CONTRACT_NO,p.NAME,p.CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
 //$fields = '*';
 $join = NULL;
-$where = NULL;
+$where = "p.CLIENT_ID=c.ID";
 $order = 'p.CONTRACT_NO ASC';
 
 $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where, $order, "$from_record_num,$records_per_page");
@@ -32,6 +32,19 @@ $num = $stmt->rowCount();
 
 $currentPage = basename(($_SERVER['PHP_SELF']));
 ?>
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      /* html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      } */
+    </style>
 <div class="row">
     <div id='button' class='right-button-margin'>
         <a href='index.php' class='btn btn-default pull-left left-margin'>Refresh</a>
@@ -59,7 +72,7 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-8">
         <div class='table-responsive'>
             <table id='dataTable' class='table  table-striped table-hover table-responsive table-bordered'>
                 <thead>
@@ -110,6 +123,41 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
         }
         ?>
     </div>
+     <div class="col-lg-4">
+         <div style="width:400px;height:600px;">
+            <div id="map"></div>
+                </div>
+            <script>
+
+              function initMap() {
+                var myLatLng = {lat: 7.927079, lng: 80.861244};
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 7.5,
+                  center: myLatLng
+                });
+
+                var marker = new google.maps.Marker({
+                  position: {lat: 7.2906, lng: 80.6337},//{lat: 8.7542, lng: 80.4982},
+                  map: map,
+                  title: 'Kandy'
+                });
+                
+                var marker2 = new google.maps.Marker({
+                  position: {lat: 8.7542, lng: 80.4982},//{lat: 8.7542, lng: 80.4982},
+                  map: map,
+                  title: 'Vavuniya'
+                });
+              }
+              // AIzaSyAGSMpFXSyv5FsV_pdn9opE619R_JzhIOw
+
+            </script>
+            
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGSMpFXSyv5FsV_pdn9opE619R_JzhIOw&callback=initMap">
+            </script>
+                       
+     </div>
 </div>
 
 

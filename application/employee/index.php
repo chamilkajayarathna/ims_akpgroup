@@ -71,7 +71,7 @@ if ($num > 0) {
     echo "<th>Name</th>";
     echo "<th>Designation</th>";
     echo "<th>EPF No</th>";
-     echo "<th>Appoinment Date</th>";
+    echo "<th>Appoinment Date</th>";
     echo "<th>NIC</th>";
     echo "<th>Date of Birth</th>";
     echo "<th>Address</th>";

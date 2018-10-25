@@ -13,7 +13,7 @@ if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
 //Load page Headder
 require_once(FOLDER_Template . 'header.php');
 
-$emp = $dbCRUD->ddlDataLoad('SELECT serial_no,name,epf_no FROM employee');
+$emp = $dbCRUD->ddlDataLoad('SELECT SERIAL_NO,NAME_WITH_INITIALS,EPF_NO FROM employee');
 
 date_default_timezone_set('Asia/Kolkata');
 $location = 'Head Office';
@@ -70,8 +70,8 @@ if (isset($_POST['changeLoc'])) {
 <div class="row">
     <div class="col-lg-12">
         <?php
-        $query = 'SELECT e.serial_no,e.name,e.epf_no,e.nic,e.dob,e.address,e.contact,d.designation '
-                . 'from employee e, machinesite m, designation d '
+        $query = 'SELECT e.SERIAL_NO,e.NAME_WITH_INITIALS,e.EPF_NO,e.NIC,e.DATE_OF_BIRTH,e.ADDRESS,e.PHONE,d.NAME '
+                . 'from employee e, machine_site m, designation d '
                 . 'where m.siteNo=e.workSite AND d.number = e.designation AND '
                 . 'm.siteN="Head Office" AND e.serial_no NOT IN '
                 . '(SELECT a.emp_ID from employee e, machinesite m,attendance a '

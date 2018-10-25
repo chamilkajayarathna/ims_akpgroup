@@ -23,9 +23,10 @@ require_once(FOLDER_Template . 'header.php');
                     Please Enter the Employee ID - 
                     <input type="text" id="name_stop" name="name_stop" autofocus="autofocus" class="form-control" />
                     <?php
-                    date_default_timezone_set('Asia/Kolkata');
-                    echo "<h4>" . date("l Y/m/d") . "</h4><h3>" . date("h:i A") . "</h3>";
+//                    date_default_timezone_set('Asia/Kolkata');
+//                    echo "<h4>" . date("l Y/m/d") . "</h4><h3>" . date("h:i A") . "</h3>";
                     ?>
+                    <div id="timestamp"></div>
                 </div>
             </div>
 
@@ -46,7 +47,7 @@ require_once(FOLDER_Template . 'header.php');
         key_count_global = 0; // Global variable
         document.getElementById("name_stop").onkeypress = function () {
             key_count_global++;
-            setTimeout("lookup(" + key_count_global + ")", 500);//Function will be called 1 second after user types anything. Feel free to change this value.
+            setTimeout("lookup(" + key_count_global + ")", 1000);//Function will be called 1 second after user types anything. Feel free to change this value.
         }
     }
     window.onload = init; //or $(document).ready(init); - for jQuery
@@ -61,7 +62,7 @@ require_once(FOLDER_Template . 'header.php');
     }
 
     function message() {
-        $('.lookup').delay(2000).fadeOut('slow');
+        $('.lookup').delay(5000).fadeOut('slow');
         var kw = $("#name_stop").val();
         var dataString = 'empID=' + kw;
         //alert(kw);
@@ -86,22 +87,32 @@ require_once(FOLDER_Template . 'header.php');
                 dataType: "html", //expect html to be returned                
                 success: function (response) {
                     $(".display").html(response);
-                    setTimeout(load, 5000)
+                    setTimeout(load, 30000);
                 }
             });
         }
 
         load(); //if you don't want the click
         //$("#display").click(load); //if you want to start the display on click
+        setInterval(timestamp, 500);
     });
 
     function reloadNew() {
-        setTimeout("location.reload(true);", 5000);
+        setTimeout("location.reload(true);", 50000);
     }
 
 //    $(function () {
 //        $('.display').delay(4000).fadeOut('slow');
 //    });
+
+    function timestamp() {
+        $.ajax({
+            url: 'application/assets/timestamp.php',
+            success: function(data) {
+                $('#timestamp').html(data);
+            },
+        });
+    }
 </script>
 <?php
 //include "template/footer.php";

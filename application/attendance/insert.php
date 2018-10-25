@@ -2,7 +2,10 @@
 require '../../core/init.php';
 
 date_default_timezone_set('Asia/Kolkata');
-$curntDate = date('Y/m/d') . "<br>";
+//$curntDate = date('Y/m/d') . "<br>";
+$curntDateTime = date("Y-m-d H:i:s");
+$curntDate = date('Y/m/d');
+$curntTime = date("H:i:s");
 $inTime = date("H:i:s A");
 $outTime = date("H:i:s A");
 
@@ -12,71 +15,131 @@ $join = 'employee e ON e.serial_no = m.emp_ID JOIN designation d ON d.number = e
 
 $where = 'date = ' . $curntDate;
 $empID = NULL;
+$employee_id = NULL;
 if (isset($_POST['empID'])) {
     $empID = $_POST['empID'];
-    $count = $dbCRUD->countAll('employee','serial_no','serial_no='.$empID);
-    if ($count<1) {
+    //$count = $dbCRUD->get('employee','SERIAL_NO','SERIAL_NO='.$empID);
+
+    $table_Name = 'employee';
+    $fiels = '*';
+    $join = NULL;
+    $where = 'SERIAL_NO=\'' . $empID . '\'';
+
+    $stmt = $dbCRUD->selectAll($table_Name, $fiels, $join, $where);
+    $count = $stmt->rowCount();
+
+    if ($count < 1) {
         echo "<div class=\"alert alert-danger alert-dismissable\">";
         echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-        echo "SORRY ! Invalid User.";
+        echo "SORRY ! Invalid Employee ID.";
         echo "</div>";
-    }
-    
-    $nameCheck = $dbCRUD->countAll('attendance', 'emp_ID', 'emp_ID=' . $empID . ' AND date ="' . $curntDate . '" AND dayEnd = "0" ');
-    if ($nameCheck>0) {
-        $nameCheck = $dbCRUD->ddlDataLoad("SELECT name FROM employee WHERE serial_no= " . $empID . " ");
-        foreach ($nameCheck as $name) {
-            $curntName = $name['name'];
-            $data = array('outTime' => $outTime,
-                'dayEnd' => 1
-            );
-            $dbCRUD->updateData($table_Name, $data, 'emp_ID = ' . $empID . ' AND dayEnd = 0');
-            echo "<div class=\"alert alert-danger alert-dismissable\">";
-            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-            echo "GoodBye ! You Successfully Logged Out";
-            echo "</div>";
-        }
-    } else {
-        $nameCheck = $dbCRUD->countAll('attendance', 'emp_ID', 'emp_ID=' . $empID . ' AND date ="' . $curntDate . '"');
-        if ($dbCRUD->ddlDataLoad('SELECT `emp_ID` FROM `attendance` WHERE `emp_ID` = ' . $empID . ' AND date ="' . $curntDate . '" AND `dayEnd` = 1')) {
-            echo "<div class=\"alert alert-danger alert-dismissable\" id='alert'>";
-            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-            echo "SORRY! You Already Logged OUT...!!!";
-            echo "</div>";
+    } else if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        //extract($row);
+        $employee_id = $row['ID'];
+
+        $tableName = 'attendance';
+        $fields = '*';
+        $join = NULL;
+        $where = 'EMPLOYEE_ID=\'' . $employee_id . '\' AND DATE(DATE_TIME)=\'' . $curntDate . '\'';
+        $order = ' DATE_TIME DESC';
+        $limit = NULL;
+
+        $stmt = $dbCRUD->selectAll($tableName, $fields, $join, $where, $order, $limit);
+        $todayAttendanceCount = $stmt->rowCount();
+
+        if ($todayAttendanceCount > 0) {
+            $attendanceType = '';
+            if ($firstRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $checkTime = DateTime::createFromFormat('H:i a', '4:30 pm');
+                if ($firstRow['TYPE'] == 'CHECK-IN') {
+                    if ($curntTime < $checkTime) {
+                        $attendanceType = 'TEMP-OUT';
+                    } else {
+                        $attendanceType = 'CHECK-OUT';
+                    }
+                } else if ($firstRow['TYPE'] == 'TEMP-OUT') {
+                    if ($curntTime < $checkTime) {
+                        $attendanceType = 'TEMP-IN';
+                    } else {
+                        $attendanceType = 'CHECK-OUT';
+                    }
+                } else if ($firstRow['TYPE'] == 'TEMP-IN') {
+                    if ($curntTime < $checkTime) {
+                        $attendanceType = 'TEMP-OUT';
+                    } else {
+                        $attendanceType = 'CHECK-OUT';
+                    }
+                }
+                if ($attendanceType != '') {
+                    $data = array(
+                        'DATE_TIME' => $curntDateTime,
+                        'TYPE' => $attendanceType,
+                        'EMPLOYEE_ID' => $employee_id,
+                        'INSERT_USER' => 1,
+                        'INSERT_DATETIME' => date('Y-m-d H:i:s'),
+                        'UPDATE_USER' => 1,
+                        'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+                        'STATUS' => 1
+                    );
+                    $success = $dbCRUD->insertData($tableName, $data);
+                    if ($success) {
+                        echo "<div class=\"alert alert-success alert-dismissable\" id='alert'>";
+                        echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
+                        echo $attendanceType . " Marked Successfully";
+                        echo "</div>";
+                    }
+                }
+            }
         } else {
-            $nameCheck = $dbCRUD->ddlDataLoad("SELECT name FROM employee WHERE serial_no= " . $empID . " ");
-            foreach ($nameCheck as $name) {
-                $curntName = $name['name'];
-                $data = array('emp_ID' => $empID,
-                    'date' => $curntDate,
-                    'inTime' => $inTime,
-                    'dayEnd' => 0
-                );
-                $dbCRUD->insertData($table_Name, $data);
+
+            $data = array(
+                'DATE_TIME' => $curntDateTime,
+                'TYPE' => 'CHECK-IN',
+                'EMPLOYEE_ID' => $employee_id,
+                'INSERT_USER' => 1,
+                'INSERT_DATETIME' => date('Y-m-d H:i:s'),
+                'UPDATE_USER' => 1,
+                'UPDATE_DATETIME' => date('Y-m-d H:i:s'),
+                'STATUS' => 1
+            );
+            $success = $dbCRUD->insertData($tableName, $data);
+            if ($success) {
                 echo "<div class=\"alert alert-success alert-dismissable\" id='alert'>";
                 echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-                echo "Welcome! You successfully Logged In";
+                echo "CHECK-IN Marked Successfully";
                 echo "</div>";
             }
         }
     }
 }
 
-$query = 'select a.*, e.name, d.designation '
-        . 'from attendance a, employee e, designation d '
-        . 'where a.emp_ID = e.serial_no AND d.number = e.designation AND a.emp_ID=' . $empID . ' AND a.date ="' . $curntDate . '"';
-
-$stmt1 = $dbCRUD->ddlDataLoad($query);
 $name = NULL;
 $date = NULL;
 $in = NULL;
 $out = NULL;
+$tempInOut = array();
 
-foreach ($stmt1 as $attendance1) {
-    $name = $attendance1['name'];
-    $date = $attendance1['date'];
-    $in = $attendance1['inTime'];
-    $out = $attendance1['outTime'];
+if ($employee_id != NULL) {
+    $tableName = 'employee e, designation d, attendance a';
+    $fields = '*';
+    $join = NULL;
+    $where = ' e.DESIGNATION_ID=d.ID AND e.ID=a.EMPLOYEE_ID AND e.ID=\'' . $employee_id . '\' AND DATE(a.DATE_TIME)=\'' . $curntDate . '\'';
+    $order = ' a.DATE_TIME DESC';
+    $limit = NULL;
+
+    $stmt = $dbCRUD->selectAll($tableName, $fields, $join, $where, $order, $limit);
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $name = $row['NAME_WITH_INITIALS'];
+        if ($row['TYPE'] == 'CHECK-IN') {
+            $in = substr($row['DATE_TIME'], 11, 8);
+        } else if ($row['TYPE'] == 'CHECK-OUT') {
+            $out = substr($row['DATE_TIME'], 11, 8);
+        } else {
+            array_push($tempInOut, $row['TYPE'] . ":" . $row['DATE_TIME']);
+        }
+    }
+    $a = 0;
 }
 ?>
 <div class="row">
@@ -89,16 +152,32 @@ foreach ($stmt1 as $attendance1) {
                     </div>
                 </div>
             </div>
-            <div class="panel-footer">
-                <span class="pull-left">
+            <div class="panel-body">
+                <div class="page-header">
+                    <h3>IN Time &nbsp; :- &nbsp;<strong><?php echo $in ?></strong></h3>
+                </div>
+                <div class="page-header">
+                    <h3>OUT Time &nbsp; :- &nbsp;<strong><?php echo $out ?></strong></h3>
+                </div>
+                <?php if (sizeof($tempInOut) > 0) { ?>
                     <div class="page-header">
-                        <h3>IN Time &nbsp; :- &nbsp;<strong><?php echo $in ?></strong></h3>
+                        <table class="table table-striped table-condensed">
+                            <?php
+                            $count = 0;
+                            foreach ($tempInOut as $temp) {
+                                ?>
+                                <tr>
+                                    <td><?php echo ++$count; ?></td>
+                                    <td><?php echo substr($temp, 0, stripos($temp, ":")) ?></td>
+                                    <td><?php echo substr(substr($temp, stripos($temp, ":") + 1), 11, 8); ?></td>
+                                </tr>
+    <?php } ?>
+
+
+
+                        </table>
                     </div>
-                    <div class="page-header">
-                        <h3>OUT Time &nbsp; :- &nbsp;<strong><?php echo $out ?></strong></h3>
-                    </div>
-                </span>
-                <div class="clearfix"></div>
+<?php } ?>
             </div>
         </div>
     </div>

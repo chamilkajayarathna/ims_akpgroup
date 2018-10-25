@@ -44,7 +44,6 @@ class databaseCRUD {
         $fieldlist = implode('`, `', array_keys($params));
         $values = implode('", "', $params);
         $query = 'INSERT INTO `' . $table . '` (`' . $fieldlist . '`) VALUES ("' . $values . '")';
-        echo $query;
         // Make the query to insert to the database
         if ($stmt = $this->conn->prepare($query)) {
             $stmt->execute();
@@ -107,6 +106,17 @@ class databaseCRUD {
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $rowCount = $stmt->rowCount();
+        return $rowCount;
+    }
+    
+    public function count($table, $columns='*', $where = null) {
+        $query = 'SELECT COUNT('.$columns.') FROM ' . $table;
+        if ($where != null) {
+            $query .= ' WHERE ' . $where;
+        }
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $rowCount = $stmt->fetchColumn();
         return $rowCount;
     }
 
