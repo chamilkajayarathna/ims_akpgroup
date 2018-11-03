@@ -12,13 +12,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/ims/application/employee/updateEmployee.php</file>
-            <file>file:/C:/wamp64/www/ims/application/reports/empDetails.php</file>
-            <file>file:/C:/wamp64/www/ims/application/reports/projectDetails.php</file>
-            <file>file:/C:/wamp64/www/ims/template/slider.php</file>
-            <file>file:/C:/wamp64/www/ims/application/employee/addEmployee.php</file>
-            <file>file:/C:/wamp64/www/ims/application/reports/printAllProjects.php</file>
-            <file>file:/C:/wamp64/www/ims/application/login/login.php</file>
+            <file>file:/C:/wamp64/www/ims/application/employee/editEmployee.php</file>
+            <file>file:/C:/wamp64/www/ims/application/construction/site/index.php</file>
+            <file>file:/C:/wamp64/www/ims/application/employee/index.php</file>
+            <file>file:/C:/wamp64/www/ims/application/construction/index.php</file>
         </group>
     </open-files>
 </project-private>

@@ -42,7 +42,7 @@
         <!-- Calender JavaScript
         ================================================== -->
         <link rel="stylesheet" href="<?php FOLDER_CSS ?>/IMS/css/jquery-ui.css">
-        <script src="<?php FOLDER_JS ?>/IMS/js/jquery-1.10.2.js"></script>
+<!--        <script src="<?php FOLDER_JS ?>/IMS/js/jquery-1.10.2.js"></script>-->
         <script src="<?php FOLDER_JS ?>/IMS/js/jquery-ui.js"></script>
 
         <!--================================================== -->
@@ -127,5 +127,4 @@
                     <h1 class="page-header"> <?php echo $page_title; ?> </h1> 
                     <div class="table-responsive">
 
-
-
+                        

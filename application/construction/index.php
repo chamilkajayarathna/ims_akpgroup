@@ -21,7 +21,7 @@ $records_per_page = 10;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 $table_Name = 'project p, client c';
-$fiels = 'p.CONTRACT_NO,p.NAME,p.CLIENT_ID,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
+$fiels = 'p.ID,p.CONTRACT_NO,p.NAME,c.NAME AS CLIENT_NAME,p.PROGRESS,p.COMMENCEMENT_DATE,p.COMPLETION_DATE,p.EXTENDED_DATE,p.CONTRACT_PERIOD,p.CONTRACT_SUM,p.EXTENDED_CONTRACT_SUM';
 //$fields = '*';
 $join = NULL;
 $where = "p.CLIENT_ID=c.ID";
@@ -77,7 +77,7 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
             <table id='dataTable' class='table  table-striped table-hover table-responsive table-bordered'>
                 <thead>
                     <tr>
-                        
+                        <th>Contract No</th>
                         <th>Project Name</th>
                         <th>Client</th>
                         <th>Progress</th>
@@ -97,8 +97,9 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
                             $total = $rows['CONTRACT_SUM'] + $rows['EXTENDED_CONTRACT_SUM'];
                             echo "<tr>";
                             
-                            echo "<td>" . $rows['CONTRACT_NO'] . "</td>";
+                            echo "<td><a href='view.php?id=".$rows['ID']."'>".$rows['CONTRACT_NO']."</a></td>";
                             echo "<td>" . $rows['NAME'] . "</td>";
+                            echo "<td>" . $rows['CLIENT_NAME'] . "</td>";
                             echo "<td>" . $rows['PROGRESS'] . "</td>";
                             echo "<td>" . $rows['COMMENCEMENT_DATE'] . "</td>";
                             echo "<td>" . $rows['COMPLETION_DATE'] . "</td>";
@@ -119,7 +120,7 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
             $_SESSION['tableName'] = 'contractdetails';
             require_once (FOLDER_Template . 'paging_employee.php');
         } else {
-            echo "<div>No products found.</div>";
+            echo "<div>No projects found.</div>";
         }
         ?>
     </div>
@@ -127,7 +128,18 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
          <div style="width:400px;height:600px;">
             <div id="map"></div>
                 </div>
-            <script>
+         <script type="text/javascript">
+             
+             $(document).ready(function(){
+//                $.ajax({
+//                    url: 'site/list.php'
+//                }).done(function(data) {
+//                    alert(data);
+//                    $.each(JSON.parse(data), function(i, obj) {
+//                    alert(obj.ID);
+//                  });
+//                });  
+             });
 
               function initMap() {
                 var myLatLng = {lat: 7.927079, lng: 80.861244};
@@ -136,18 +148,26 @@ $currentPage = basename(($_SERVER['PHP_SELF']));
                   zoom: 7.5,
                   center: myLatLng
                 });
-
-                var marker = new google.maps.Marker({
-                  position: {lat: 7.2906, lng: 80.6337},//{lat: 8.7542, lng: 80.4982},
-                  map: map,
-                  title: 'Kandy'
-                });
                 
-                var marker2 = new google.maps.Marker({
-                  position: {lat: 8.7542, lng: 80.4982},//{lat: 8.7542, lng: 80.4982},
-                  map: map,
-                  title: 'Vavuniya'
-                });
+                $.ajax({
+                    url: 'site/list.php'
+                }).done(function(data) {
+                    $.each(JSON.parse(data), function(i, obj) {
+                     var marker = new google.maps.Marker({
+                        position: {lat: Number(obj.LATITUDE), lng: Number(obj.LONGITUDE)},//{lat: 8.7542, lng: 80.4982},
+                        map: map,
+                        title: obj.NAME+" ("+obj.PROGRESS+ ")"
+                      });
+                  });
+                });  
+
+//                var marker = new google.maps.Marker({
+//                  position: {lat: 7.2906, lng: 80.6337},//{lat: 8.7542, lng: 80.4982},
+//                  map: map,
+//                  title: 'Kandy'
+//                });
+                
+
               }
               // AIzaSyAGSMpFXSyv5FsV_pdn9opE619R_JzhIOw
 
